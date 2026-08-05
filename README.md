@@ -72,6 +72,8 @@ The CI workflow repeats the small reference comparison on native x86_64 Docker. 
 Silicon, Docker Desktop emulates these amd64 sanitizer images; sanitizer allocator failures
 can make fixed images appear to crash before the target executes, so that result is retained
 as portability evidence rather than accepted as the benchmark oracle.
+The exact template pins, size-stratified E2B results, Fireworks costs, and CI run are recorded
+in [`verification/RESULTS.md`](verification/RESULTS.md).
 
 ## Capacity and cleanup
 
