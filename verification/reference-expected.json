@@ -1,0 +1,11 @@
+{
+  "task_id": "arvo:1065",
+  "runtime": "pinned-reference-expectation",
+  "verification": {
+    "vulnerable_class": "crash",
+    "fixed_class": "clean"
+  },
+  "score": {
+    "success": true
+  }
+}

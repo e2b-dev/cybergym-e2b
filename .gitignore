@@ -1,0 +1,12 @@
+.cache/
+.env
+.env.*
+!.env.example
+.pytest_cache/
+.ruff_cache/
+.venv/
+__pycache__/
+*.py[cod]
+artifacts/
+template-manifest.json
+

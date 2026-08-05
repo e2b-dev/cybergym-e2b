@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: true
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          enable-cache: true
+      - run: uv sync --all-groups
+      - run: uv run ruff format --check src tests
+      - run: uv run ruff check src tests
+      - run: uv run pytest -q
+
+  native-docker-reference:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: true
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          enable-cache: true
+      - run: test "$(uname -m)" = x86_64
+      - run: uv sync --extra docker-baseline
+      - run: >-
+          uv run --extra docker-baseline cybergym-e2b docker-baseline
+          --task arvo:1065
+          --output artifacts/native-docker-arvo-1065.json
+      - run: >-
+          uv run cybergym-e2b compare
+          verification/reference-expected.json
+          artifacts/native-docker-arvo-1065.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: native-docker-reference
+          path: artifacts/native-docker-arvo-1065.json

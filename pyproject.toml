@@ -1,0 +1,46 @@
+[project]
+name = "cybergym-e2b"
+version = "0.1.0"
+description = "A thin, pinned E2B runtime adapter for upstream CyberGym"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+dependencies = [
+  "e2b>=2.37.0,<2.38",
+  "httpx>=0.28.1,<0.29",
+  "pydantic>=2.12,<3",
+  "python-dotenv>=1.2,<2",
+]
+
+[project.optional-dependencies]
+docker-baseline = ["cybergym[server]"]
+
+[project.scripts]
+cybergym-e2b = "cybergym_e2b.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.8.4,<0.9"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "cybergym_e2b"
+
+[tool.uv.sources]
+cybergym = { path = "vendor/cybergym" }
+
+[dependency-groups]
+dev = [
+  "pytest>=9,<10",
+  "ruff>=0.12,<1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["vendor"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
